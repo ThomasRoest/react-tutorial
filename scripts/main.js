@@ -66,6 +66,11 @@ var App = React.createClass({
     //adding fish to order ( + 1 if same fish else = 1)
     this.setState({ order: this.state.order });
   },
+  removeFromOrder : function(key){
+    delete this.state.order[key];
+    //delete entire order
+    this.setState({ order: this.state.order });
+  }, 
   //adding the fish to the app state
   addFish : function(fish){
     // unique timestamp
@@ -102,7 +107,7 @@ var App = React.createClass({
           {/* iteration over an array with map*/}
           </ul>
         </div>
-        <Order fishes={this.state.fishes} order={this.state.order} />
+        <Order fishes={this.state.fishes} order={this.state.order} removeFromOrder={this.removeFromOrder}/>
         <Inventory addFish={this.addFish} loadSamples={this.loadSamples} fishes={this.state.fishes} linkState={this.linkState} removeFish={this.removeFish}/>
         {/*pass the addfish method to inventory component*/}
       </div>
@@ -201,6 +206,8 @@ var Order = React.createClass({
   renderOrder : function(key){
     var fish = this.props.fishes[key];
     var count = this.props.order[key];
+    var removeButton = <button onClick={this.props.removeFromOrder.bind(null, key)}>&times;</button>;
+    //place small component in variables
 
     if(!fish){
       return <li key={key}>Sorry no fiiisshhh</li>
@@ -211,6 +218,7 @@ var Order = React.createClass({
         <span>{count}</span>lbs
         {fish.name}
         <span className="price">{h.formatPrice(count * fish.price)}</span>
+        {removeButton}
       </li>
     )
   },
