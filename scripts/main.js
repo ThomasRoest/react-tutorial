@@ -1,27 +1,25 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 //require react for the browser
+var CssTransitionGroup = require('react-addons-css-transition-group')
 
 var ReactRouter = require('react-router');
 var Router = ReactRouter.Router;
 var Route = ReactRouter.Route;
 var Navigation = ReactRouter.Navigation;
+//react router
 
 var History = ReactRouter.History;
 
 var createBrowserHistory = require('history/lib/createBrowserHistory');
 //for using push state
 
-//react router
-
 var h = require('./helpers');
 /*include helpers js*/
-
 
 //Firebase setup
 var Rebase = require('re-base');
 var base = Rebase.createClass('https://crackling-torch-8484.firebaseio.com/');
-
 
 /* react catalyst for bi-directional data flow*/
 var Catalyst = require('react-catalyst');
@@ -114,7 +112,6 @@ var App = React.createClass({
     );
   }  
 });
-
 
 /*Fish*/
 var Fish = React.createClass({
@@ -215,12 +212,15 @@ var Order = React.createClass({
 
     return (
       <li key={key}>
-        <span>{count}</span>lbs
-        {fish.name}
+      <CssTransitionGroup component="span" transitionName="count" transitionLeaveTimeout={250} transitionEnterTimeout={250}>
+        <span key={count}>{count}</span>
+      </CssTransitionGroup>
+
+        lbs {fish.name} {removeButton}
         <span className="price">{h.formatPrice(count * fish.price)}</span>
-        {removeButton}
+        
       </li>
-    )
+    );
   },
   render : function() {
     var orderIds = Object.keys(this.props.order);
@@ -239,14 +239,22 @@ var Order = React.createClass({
 
     return (
       <div className="order-wrap">
-      <h2 className="order-title">Your order</h2>
-      <ul className="order">
-        {orderIds.map(this.renderOrder)}
-        <li className="total">
-          <strong>Total: </strong>
-          {h.formatPrice(total) }
-        </li>
-      </ul>
+        <h2 className="order-title">Your order</h2>
+        
+        <CssTransitionGroup 
+            className="order" 
+            component="ul"
+            transitionName="order"
+            transitionEnterTimeout={1500}
+            transitionLeaveTimeout={1500}>
+          {/* add css transitions */}
+          {orderIds.map(this.renderOrder)}
+          <li className="total">
+            <strong>Total: </strong>
+            {h.formatPrice(total) }
+          </li>
+        </CssTransitionGroup>
+
       </div>
     );
   }
